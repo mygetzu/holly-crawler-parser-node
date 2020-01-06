@@ -101,12 +101,12 @@ export class ReviewService {
     let next = false;
 
     let reviews_from_db = await this.getReviewByLocationId(hotel_locationID);
-    let response = await this.apiService.grabReviewByHotelLocationId(
+    let reviews_from_api = await this.apiService.grabReviewByHotelLocationId(
       url,
       hotel,
     );
 
-    if (reviews_from_db.length != response.paging.total_results) {
+    if (reviews_from_db.length != reviews_from_api.paging.total_results) {
       console.log(
         '--> Review from hotel (' + hotel.name + ') is not complete !',
       );
@@ -115,6 +115,10 @@ export class ReviewService {
 
     do {
       try {
+        let response = await this.apiService.grabReviewByHotelLocationId(
+          url,
+          hotel,
+        );
         const reviews = response.data;
         const paging = response.paging;
 
