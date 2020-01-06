@@ -60,7 +60,7 @@ export class ReviewService {
     }
   }
 
-  async getReviewByLocationId(location_id: string): Promise<Review[]> {
+  async getReviewsByLocationId(location_id: string): Promise<Review[]> {
     try {
       const data = await this.repo.find({
         where: { location_id: location_id },
@@ -73,7 +73,7 @@ export class ReviewService {
     }
   }
 
-  async deleteManyByHotelLocationId(hotel_location_id: string) {
+  async deleteManyByHotelLocationId(hotel_location_id: string): Promise<any> {
     try {
       const data = await this.repo.delete({ location_id: hotel_location_id });
 
@@ -99,54 +99,74 @@ export class ReviewService {
 
     let url = URL_HOTELS_BY_LOCATION + hotel.location_id + '/reviews';
     let next = false;
+    let reviews_from_db;
 
-    let reviews_from_db = await this.getReviewByLocationId(hotel_locationID);
-    let reviews_from_api = await this.apiService.grabReviewByHotelLocationId(
-      url,
-      hotel,
-    );
+    try {
+      let reviews_from_db = await this.getReviewsByLocationId(hotel_locationID);
 
-    if (reviews_from_db.length != reviews_from_api.paging.total_results) {
-      console.log(
-        '--> Review from hotel (' + hotel.name + ') is not complete !',
-      );
-      this.deleteManyByHotelLocationId(hotel_locationID);
+      do {
+        try {
+          let response = await this.apiService.grabReviewByHotelLocationId(
+            url,
+            hotel,
+          );
+          const reviews = response.data;
+          const paging = response.paging;
+
+          await Promise.all(
+            reviews.map(async review => {
+              let date_now: Date = new Date();
+              let is_review_exist = await reviews_from_db.some(
+                r => r.id == review.id,
+              );
+
+              if (!is_review_exist) {
+                const reviewCreate = {
+                  ...review,
+                  hotel: hotel,
+                  hotel_locationID: hotel_locationID,
+                  hotel_ObjectId: hotel_ObjectId,
+                  created_at: date_now,
+                };
+                await this.create(reviewCreate);
+                // await KafkaService.produce('reviews', reviewCreate);
+              } else {
+                console.log('Review (' + review.id + ') is already exist !\n');
+              }
+            }),
+          );
+
+          if (paging.next != null) {
+            next = true;
+            url = paging.next;
+          } else next = false;
+        } catch (error) {
+          console.log('Failed to save review from hotel : ' + hotel.name);
+          console.log(error + '\n');
+          break;
+        }
+      } while (next);
+
+      // let reviews_from_api = await this.apiService.grabReviewByHotelLocationId(
+      //   url,
+      //   hotel,
+      // );
+
+      // console.log(
+      //   reviews_from_db.length + ' = ' + reviews_from_api.paging.total_results,
+      // );
+
+      // if (reviews_from_db.length > reviews_from_api.paging.total_results) {
+      //   console.log(
+      //     '--> Review from hotel (' + hotel.name + ') is not complete !',
+      //   );
+      //   await this.deleteManyByHotelLocationId(hotel_locationID);
+      // } else {
+      //   console.log('--> Review from hotel is complete !');
+      // }
+    } catch (error) {
+      console.log('Failed Get review from hotel : ' + hotel.name);
+      console.log(error + '\n');
     }
-
-    do {
-      try {
-        let response = await this.apiService.grabReviewByHotelLocationId(
-          url,
-          hotel,
-        );
-        const reviews = response.data;
-        const paging = response.paging;
-
-        await Promise.all(
-          reviews.map(async review => {
-            let date_now: Date = new Date();
-
-            const reviewCreate = {
-              ...review,
-              hotel: hotel,
-              hotel_locationID: hotel_locationID,
-              hotel_ObjectId: hotel_ObjectId,
-              created_at: date_now,
-            };
-            await this.create(reviewCreate);
-            // await KafkaService.produce('reviews', reviewCreate);
-          }),
-        );
-
-        if (paging.next != null) {
-          next = true;
-          url = paging.next;
-        } else next = false;
-      } catch (error) {
-        console.log('Failed to save review from hotel : ' + hotel.name);
-        console.log(error + '\n');
-        break;
-      }
-    } while (next);
   }
 }

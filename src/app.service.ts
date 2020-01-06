@@ -23,6 +23,12 @@ export class AppService extends NestSchedule {
     console.log('=============== Starting Cron Job ===============');
     const locs = await this.locationService.findAll();
 
+    // await Promise.all(
+    // locs.map(loc => {
+    //   this.hotelService.getHotelSaveReview(loc);
+    // });
+    // );
+
     let i = 0;
     const waitFor = ms => new Promise(r => setTimeout(r, ms));
     const asyncForEach = async (index, array, callback) => {
@@ -38,7 +44,7 @@ export class AppService extends NestSchedule {
         await this.hotelService.getHotelSaveReview(loc);
       });
     };
-    start();
+    await start();
   }
 
   @Cron('0 10 23 * * *', {
