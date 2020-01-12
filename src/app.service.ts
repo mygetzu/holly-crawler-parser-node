@@ -14,7 +14,7 @@ export class AppService extends NestSchedule {
   ) {
     super();
   }
-  @Cron('0 20 17 12 * *', {
+  @Cron('0 20 21 12 * *', {
     startTime: new Date(),
     endTime: new Date(new Date().getTime() + 24 * 60 * 60 * 1000),
   })
@@ -41,10 +41,10 @@ export class AppService extends NestSchedule {
     await start();
   }
 
-  @Cron('0 5 * * * *', {
-    startTime: new Date(),
-    endTime: new Date(new Date().getTime() + 24 * 60 * 60 * 1000),
-  })
+  // @Cron('0 5 * * * *', {
+  //   startTime: new Date(),
+  //   endTime: new Date(new Date().getTime() + 24 * 60 * 60 * 1000),
+  // })
   async crawlHotel() {
     console.log('=============== Start Crawling Hotel List ===============');
     const locs = await this.locationService.findIndonesia();
