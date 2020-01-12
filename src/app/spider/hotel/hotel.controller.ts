@@ -29,7 +29,7 @@ export class HotelController {
   }
 
   @Get('/crawl')
-  async crawlHotelByLocId() {
-    await this.service.crawlHotel();
+  async crawlHotelByLocId(): Promise<any> {
+    return this.service.crawlHotel();
   }
 }

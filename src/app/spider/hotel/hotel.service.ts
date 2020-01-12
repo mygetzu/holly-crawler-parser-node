@@ -152,7 +152,14 @@ export class HotelService {
                 hotelCreate.location_id,
               );
               await this.reviewService.createMany(hotelByLocHotelId);
-            } else console.log('Hotel = ' + hotel.name + ' is already exist !');
+            } else
+              console.log(
+                '[ ' +
+                  Date.now() +
+                  ' ] Hotel = ' +
+                  hotel.name +
+                  ' is already exist !',
+              );
           }),
         );
 
@@ -161,7 +168,12 @@ export class HotelService {
           url = paging.next;
         } else next = false;
       } catch (error) {
-        console.log('Failed to save hotel from location ID : ' + locationID);
+        console.log(
+          '[ ' +
+            Date.now() +
+            ' ] Failed to save hotel from location ID : ' +
+            locationID,
+        );
         console.log(error + '\n');
         break;
       }
@@ -171,6 +183,8 @@ export class HotelService {
   async createManyWithoutReview(loc: Location): Promise<any> {
     const locationID = loc.location_id;
     const locationObjectID = loc._id;
+
+    console.log('[ ' + Date().toString() + ']  Hotel from : ' + loc.name);
 
     let url = URL_HOTELS_BY_LOCATION + loc.location_id + '/hotels';
     let next = false;
@@ -196,7 +210,13 @@ export class HotelService {
               };
               await this.create(hotelCreate);
             } else {
-              console.log('Hotel  ( ' + hotel.name + ' ) is already exist !');
+              console.log(
+                '[ ' +
+                  Date().toString() +
+                  ' ] Hotel  ( ' +
+                  hotel.name +
+                  ' ) is already exist !',
+              );
 
               // const hotelUpdate = {
               //   location: loc,
@@ -211,33 +231,39 @@ export class HotelService {
           url = paging.next;
         } else next = false;
       } catch (error) {
-        console.log('Failed to save hotel from location ID : ' + locationID);
+        console.log(
+          '[ ' +
+            Date().toString() +
+            '] Failed to save hotel from location ID : ' +
+            locationID,
+        );
         console.log(error + '\n');
         break;
       }
     } while (next);
   }
 
-  async crawlHotel(): Promise<any> {
+  async crawlHotel(): Promise<Location[]> {
     console.log('=============== Start Crawling Hotel List ===============');
     const locs = await this.locationService.findAll();
     console.log(locs);
+    return locs;
 
-    let i = 0;
-    const waitFor = ms => new Promise(r => setTimeout(r, ms));
-    const asyncForEach = async (index, array, callback) => {
-      for (index = 0; index < array.length; index++) {
-        await callback(array[index], index, array);
-      }
-    };
+    // let i = 0;
+    // const waitFor = ms => new Promise(r => setTimeout(r, ms));
+    // const asyncForEach = async (index, array, callback) => {
+    //   for (index = 0; index < array.length; index++) {
+    //     await callback(array[index], index, array);
+    //   }
+    // };
 
-    const saveHotels = async () => {
-      await asyncForEach(i, locs, async loc => {
-        await waitFor(1);
+    // const saveHotels = async () => {
+    //   await asyncForEach(i, locs, async loc => {
+    //     await waitFor(1);
 
-        await this.createManyWithoutReview(loc);
-      });
-    };
-    await saveHotels();
+    //     await this.createManyWithoutReview(loc);
+    //   });
+    // };
+    // await saveHotels();
   }
 }

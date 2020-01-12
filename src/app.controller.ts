@@ -6,6 +6,6 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
   @Get()
   async getRoot() {
-    return this.appService.crawlReview();
+    return this.appService.crawlHotel();
   }
 }

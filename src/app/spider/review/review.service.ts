@@ -37,13 +37,27 @@ export class ReviewService {
       const save = await this.repo.save(dto);
 
       if (save) {
-        console.log('Saved ! Review ' + dto.id + ' - ' + dto.title);
+        console.log(
+          '[ ' +
+            Date().toString() +
+            ' ] Saved ! Review ' +
+            dto.id +
+            ' - ' +
+            dto.title,
+        );
         return save;
       }
     } catch (error) {
-      console.log('Failed to save review with review id: ' + dto.id);
+      console.log(
+        '[ ' +
+          Date().toString() +
+          ' ] Failed to save review with review id: ' +
+          dto.id,
+      );
       console.log(error + '\n');
-      throw new BadRequestException('Failed to save data !');
+      throw new BadRequestException(
+        '[ ' + Date.now() + ' ] Failed to save data !',
+      );
     }
   }
 
@@ -131,7 +145,13 @@ export class ReviewService {
                 await this.create(reviewCreate);
                 // await KafkaService.produce('reviews', reviewCreate);
               } else {
-                console.log('Review (' + review.id + ') is already exist !\n');
+                console.log(
+                  '[ ' +
+                    Date().toString() +
+                    ' ] Review (' +
+                    review.id +
+                    ') is already exist !\n',
+                );
               }
             }),
           );
@@ -146,24 +166,6 @@ export class ReviewService {
           break;
         }
       } while (next);
-
-      // let reviews_from_api = await this.apiService.grabReviewByHotelLocationId(
-      //   url,
-      //   hotel,
-      // );
-
-      // console.log(
-      //   reviews_from_db.length + ' = ' + reviews_from_api.paging.total_results,
-      // );
-
-      // if (reviews_from_db.length > reviews_from_api.paging.total_results) {
-      //   console.log(
-      //     '--> Review from hotel (' + hotel.name + ') is not complete !',
-      //   );
-      //   await this.deleteManyByHotelLocationId(hotel_locationID);
-      // } else {
-      //   console.log('--> Review from hotel is complete !');
-      // }
     } catch (error) {
       console.log('Failed Get review from hotel : ' + hotel.name);
       console.log(error + '\n');

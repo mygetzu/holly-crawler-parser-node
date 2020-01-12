@@ -14,20 +14,14 @@ export class AppService extends NestSchedule {
   ) {
     super();
   }
-  @Cron('0 50 0 * * *', {
+  @Cron('0 20 17 12 * *', {
     startTime: new Date(),
     endTime: new Date(new Date().getTime() + 24 * 60 * 60 * 1000),
   })
   async crawlReview() {
     // await KafkaService.connect();
     console.log('=============== Starting Cron Job ===============');
-    const locs = await this.locationService.findAll();
-
-    // await Promise.all(
-    // locs.map(loc => {
-    //   this.hotelService.getHotelSaveReview(loc);
-    // });
-    // );
+    const locs = await this.locationService.findIndonesia();
 
     let i = 0;
     const waitFor = ms => new Promise(r => setTimeout(r, ms));
@@ -47,13 +41,13 @@ export class AppService extends NestSchedule {
     await start();
   }
 
-  @Cron('0 10 23 * * *', {
+  @Cron('0 5 * * * *', {
     startTime: new Date(),
     endTime: new Date(new Date().getTime() + 24 * 60 * 60 * 1000),
   })
   async crawlHotel() {
     console.log('=============== Start Crawling Hotel List ===============');
-    const locs = await this.locationService.findAll();
+    const locs = await this.locationService.findIndonesia();
 
     let i = 0;
     const waitFor = ms => new Promise(r => setTimeout(r, ms));
@@ -66,10 +60,10 @@ export class AppService extends NestSchedule {
     const saveHotels = async () => {
       await asyncForEach(i, locs, async loc => {
         await waitFor(1);
-
+        console.log(i++ + ' )');
         await this.hotelService.createManyWithoutReview(loc);
       });
     };
-    saveHotels();
+    await saveHotels();
   }
 }
