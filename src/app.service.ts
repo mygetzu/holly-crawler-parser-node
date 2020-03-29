@@ -14,10 +14,18 @@ export class AppService extends NestSchedule {
   ) {
     super();
   }
-  @Cron('0 0 16 * * *', {
-    startTime: new Date(),
-    endTime: new Date(new Date().getTime() + 24 * 60 * 60 * 1000),
-  })
+
+  @Cron(
+    '0 ' +
+      process.env.REVIEW_CRON_MINUTE +
+      ' ' +
+      process.env.REVIEW_CRON_HOUR +
+      ' * * *',
+    {
+      startTime: new Date(),
+      endTime: new Date(new Date().getTime() + 24 * 60 * 60 * 1000),
+    },
+  )
   async crawlReview() {
     // await KafkaService.connect();
     console.log('=============== Starting Cron Job ===============');
@@ -41,10 +49,17 @@ export class AppService extends NestSchedule {
     await start();
   }
 
-  @Cron('0 55 15 * * *', {
-    startTime: new Date(),
-    endTime: new Date(new Date().getTime() + 24 * 60 * 60 * 1000),
-  })
+  @Cron(
+    '0 ' +
+      process.env.HOTEL_CRON_MINUTE +
+      ' ' +
+      process.env.HOTEL_CRON_HOUR +
+      ' * * *',
+    {
+      startTime: new Date(),
+      endTime: new Date(new Date().getTime() + 24 * 60 * 60 * 1000),
+    },
+  )
   async crawlHotel() {
     console.log('=============== Start Crawling Hotel List ===============');
     const locs = await this.locationService.findIndonesia();
