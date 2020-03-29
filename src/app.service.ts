@@ -4,12 +4,22 @@ import { LocationService } from './app/spider/location/location.service';
 import { HotelService } from './app/spider/hotel/hotel.service';
 import { async } from 'rxjs/internal/scheduler/async';
 import { KafkaService } from './app/services/kafka/kafka.service';
+import { CustomConfigService } from './app/config/custom-config/custom-config.service';
+
+export const CronVariable = {
+  HOTEL_CRON_MINUTE: '33',
+  HOTEL_CRON_HOUR: '19',
+
+  REVIEW_CRON_MINUTE: '35',
+  REVIEW_CRON_HOUR: '19',
+};
 
 @Injectable()
 export class AppService extends NestSchedule {
   constructor(
     private readonly locationService: LocationService,
     private readonly hotelService: HotelService,
+    private readonly customConfigService: CustomConfigService,
     private readonly kafkaService: KafkaService,
   ) {
     super();
@@ -17,9 +27,9 @@ export class AppService extends NestSchedule {
 
   @Cron(
     '0 ' +
-      process.env.REVIEW_CRON_MINUTE +
+      CronVariable.REVIEW_CRON_MINUTE +
       ' ' +
-      process.env.REVIEW_CRON_HOUR +
+      CronVariable.REVIEW_CRON_HOUR +
       ' * * *',
     {
       startTime: new Date(),
@@ -51,9 +61,9 @@ export class AppService extends NestSchedule {
 
   @Cron(
     '0 ' +
-      process.env.HOTEL_CRON_MINUTE +
+      CronVariable.HOTEL_CRON_MINUTE +
       ' ' +
-      process.env.HOTEL_CRON_HOUR +
+      CronVariable.HOTEL_CRON_HOUR +
       ' * * *',
     {
       startTime: new Date(),

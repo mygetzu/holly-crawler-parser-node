@@ -150,7 +150,7 @@ export class ReviewService {
                     Date().toString() +
                     ' ] Review (' +
                     review.id +
-                    ') is already exist !\n',
+                    ') is already exist !',
                 );
               }
             }),
