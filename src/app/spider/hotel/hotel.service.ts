@@ -75,7 +75,14 @@ export class HotelService {
       const save = await this.repo.save(dto);
 
       if (save) {
-        console.log('--> Saved, Hotel (' + dto.location_id + ') - ' + dto.name);
+        console.log(
+          '(Hotel) [ ' +
+            Date().toString() +
+            ' ] Saved! Hotel ' +
+            dto.location_id +
+            ' - ' +
+            dto.name,
+        );
         return save;
       }
     } catch (error) {
@@ -104,7 +111,7 @@ export class HotelService {
       console.log(
         'Err : Failed to update hotel with loc hotel id : ' + dto.location_id,
       );
-      console.log(error + '\n');
+      console.log(error);
       throw new BadRequestException('Failed to update data !');
     }
   }
@@ -174,7 +181,7 @@ export class HotelService {
             ' ] Failed to save hotel from location ID : ' +
             locationID,
         );
-        console.log(error + '\n');
+        console.log(error);
         break;
       }
     } while (next);
@@ -237,7 +244,7 @@ export class HotelService {
             '] Failed to save hotel from location ID : ' +
             locationID,
         );
-        console.log(error + '\n');
+        console.log(error);
         break;
       }
     } while (next);
@@ -249,21 +256,21 @@ export class HotelService {
     console.log(locs);
     return locs;
 
-    // let i = 0;
-    // const waitFor = ms => new Promise(r => setTimeout(r, ms));
-    // const asyncForEach = async (index, array, callback) => {
-    //   for (index = 0; index < array.length; index++) {
-    //     await callback(array[index], index, array);
-    //   }
-    // };
+    let i = 0;
+    const waitFor = ms => new Promise(r => setTimeout(r, ms));
+    const asyncForEach = async (index, array, callback) => {
+      for (index = 0; index < array.length; index++) {
+        await callback(array[index], index, array);
+      }
+    };
 
-    // const saveHotels = async () => {
-    //   await asyncForEach(i, locs, async loc => {
-    //     await waitFor(1);
+    const saveHotels = async () => {
+      await asyncForEach(i, locs, async loc => {
+        await waitFor(1);
 
-    //     await this.createManyWithoutReview(loc);
-    //   });
-    // };
-    // await saveHotels();
+        await this.createManyWithoutReview(loc);
+      });
+    };
+    await saveHotels();
   }
 }

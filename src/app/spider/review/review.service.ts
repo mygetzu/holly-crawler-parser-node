@@ -38,9 +38,9 @@ export class ReviewService {
 
       if (save) {
         console.log(
-          '[ ' +
+          '(Review) [ ' +
             Date().toString() +
-            ' ] Saved ! Review ' +
+            ' ] Saved! Review ' +
             dto.id +
             ' - ' +
             dto.title,
@@ -99,7 +99,7 @@ export class ReviewService {
         );
       } else {
         console.log(
-          'Err : Delete Failed from hotel id : ' + hotel_location_id + ' !\n',
+          'Err : Delete Failed from hotel id : ' + hotel_location_id + ' !',
         );
       }
     } catch (error) {
@@ -162,13 +162,13 @@ export class ReviewService {
           } else next = false;
         } catch (error) {
           console.log('Failed to save review from hotel : ' + hotel.name);
-          console.log(error + '\n');
+          console.log(error);
           break;
         }
       } while (next);
     } catch (error) {
       console.log('Failed Get review from hotel : ' + hotel.name);
-      console.log(error + '\n');
+      console.log(error);
     }
   }
 }

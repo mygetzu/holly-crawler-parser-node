@@ -52,6 +52,8 @@ export class LocationService {
             { name: 'Ambon' },
             { name: 'Jayapura' },
             { name: 'Manokwari' },
+            { name: 'Malang' },
+            { name: 'Sidoarjo' },
           ],
         },
       });

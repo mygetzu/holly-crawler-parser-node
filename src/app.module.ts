@@ -23,7 +23,7 @@ import { KafkaService } from './app/services/kafka/kafka.service';
       type: 'mongodb',
       host: 'localhost',
       port: 27017,
-      database: 'holly_production',
+      database: 'holly_test',
       entities: [__dirname + '/**/**/*.entity{.ts,.js}'],
       synchronize: true,
       logging: true,
