@@ -25,7 +25,7 @@ import { CustomConfigService } from './app/config/custom-config/custom-config.se
       type: 'mongodb',
       host: 'localhost',
       port: 27017,
-      database: 'holly_test',
+      database: 'holly_dev',
       entities: [__dirname + '/**/**/*.entity{.ts,.js}'],
       synchronize: true,
       logging: true,
