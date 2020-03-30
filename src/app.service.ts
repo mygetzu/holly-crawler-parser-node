@@ -7,12 +7,12 @@ import { KafkaService } from './app/services/kafka/kafka.service';
 import { CustomConfigService } from './app/config/custom-config/custom-config.service';
 
 export const CronVariable = {
-  HOTEL_CRON_MINUTE: '0',
-  HOTEL_CRON_HOUR: '20',
+  HOTEL_CRON_MINUTE: '45',
+  HOTEL_CRON_HOUR: '12',
   HOTEL_CRON_DAY: '30',
 
-  REVIEW_CRON_MINUTE: '30',
-  REVIEW_CRON_HOUR: '11',
+  REVIEW_CRON_MINUTE: '0',
+  REVIEW_CRON_HOUR: '13',
   REVIEW_CRON_DAY: '1',
 };
 
