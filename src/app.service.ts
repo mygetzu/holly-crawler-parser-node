@@ -8,10 +8,10 @@ import { CustomConfigService } from './app/config/custom-config/custom-config.se
 
 export const CronVariable = {
   HOTEL_CRON_MINUTE: '0',
-  HOTEL_CRON_HOUR: '11',
+  HOTEL_CRON_HOUR: '20',
   HOTEL_CRON_DAY: '30',
 
-  REVIEW_CRON_MINUTE: '1',
+  REVIEW_CRON_MINUTE: '30',
   REVIEW_CRON_HOUR: '11',
   REVIEW_CRON_DAY: '1',
 };
@@ -42,7 +42,7 @@ export class AppService extends NestSchedule {
   )
   async crawlHotel() {
     console.log('=============== Start Crawling Hotel List ===============');
-    const locs = await this.locationService.findIndonesia();
+    const locs = await this.locationService.findAll();
 
     let i = 0;
     const waitFor = ms => new Promise(r => setTimeout(r, ms));
