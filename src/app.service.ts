@@ -12,7 +12,7 @@ export const CronVariable = {
   HOTEL_CRON_DAY: '30',
 
   REVIEW_CRON_MINUTE: '1',
-  REVIEW_CRON_HOUR: '0',
+  REVIEW_CRON_HOUR: '11',
   REVIEW_CRON_DAY: '1',
 };
 
