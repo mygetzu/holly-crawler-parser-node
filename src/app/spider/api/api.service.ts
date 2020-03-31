@@ -10,6 +10,7 @@ import { Location } from '../location/location.entity';
 import { Hotel } from '../hotel/hotel.entity';
 import { ILocation } from 'dist/app/spider/location/interfaces/location.interface';
 import { ILocationDetail } from '../location-detail/interfaces/location-detail.interface';
+import { IResponseLocationDetail } from './interfaces/response-location-detail.interface';
 
 @Injectable()
 export class ApiService {
@@ -18,14 +19,14 @@ export class ApiService {
   async grabDetailLocation(
     url: string,
     loc: Location,
-  ): Promise<IResponseHotel<ILocationDetail>> {
+  ): Promise<ILocationDetail> {
     try {
       const location_details = await this.http
-        .get<IResponseHotel<ILocationDetail>>(url, {
+        .get<IResponseLocationDetail<ILocationDetail>>(url, {
           headers: HEADER_TRIPADVISOR_API_REQ,
         })
         .toPromise();
-      return location_details.data;
+      return location_details.data.data[0].result_object;
     } catch (error) {
       console.log('Failed to retrieve detail location : ' + loc.name);
     }

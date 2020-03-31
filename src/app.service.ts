@@ -8,15 +8,15 @@ import { CustomConfigService } from './app/config/custom-config/custom-config.se
 import { LocationDetailService } from './app/spider/location-detail/location-detail.service';
 
 export const CronVariable = {
-  LOCATION_CRON_MINUTE: '15',
+  LOCATION_CRON_MINUTE: '33',
   LOCATION_CRON_HOUR: '22',
-  LOCATION_CRON_DAY: '30',
+  LOCATION_CRON_DAY: '31',
 
-  HOTEL_CRON_MINUTE: '1',
+  HOTEL_CRON_MINUTE: '5',
   HOTEL_CRON_HOUR: '0',
   HOTEL_CRON_DAY: '1',
 
-  REVIEW_CRON_MINUTE: '5',
+  REVIEW_CRON_MINUTE: '10',
   REVIEW_CRON_HOUR: '0',
   REVIEW_CRON_DAY: '1',
 };
@@ -118,7 +118,9 @@ export class AppService extends NestSchedule {
     },
   )
   async crawlLocationDetail() {
-    console.log('=============== Start Crawling Hotel List ===============');
+    console.log(
+      '=============== Start Crawling Location Detail ===============',
+    );
     const locs = await this.locationService.findAll();
 
     let i = 0;
@@ -133,7 +135,7 @@ export class AppService extends NestSchedule {
       await asyncForEach(i, locs, async loc => {
         await waitFor(1);
         console.log(i++ + ' )');
-        await this.locationDetailService.createMany(loc);
+        await this.locationDetailService.createFromGrabbing(loc);
       });
     };
     await saveHotels();

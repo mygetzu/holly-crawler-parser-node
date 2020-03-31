@@ -57,37 +57,34 @@ export class LocationDetailService {
     }
   }
 
-  async createMany(loc: Location): Promise<any> {
+  async createFromGrabbing(loc: Location): Promise<any> {
     const locationID = loc.location_id;
     let url = URL_HOTELS_BY_LOCATION_DETAIL + '&query=' + loc.name;
 
     try {
       let response = await this.apiService.grabDetailLocation(url, loc);
-      const location_details = response.data;
+      const location_detail = response;
 
-      await Promise.all(
-        location_details.map(async location_detail => {
-          let is_location_detail_exist = await this.isLocationDetailExist(
-            location_detail.location_id,
-          );
-          let date_now: Date = new Date();
-
-          if (!is_location_detail_exist) {
-            const locationDetailCreate = {
-              ...location_detail,
-              created_at: date_now,
-            };
-            await this.create(locationDetailCreate);
-          } else
-            console.log(
-              '[ ' +
-                Date.now() +
-                ' ] Location Detail = ' +
-                location_detail.name +
-                ' is already exist !',
-            );
-        }),
+      let is_location_detail_exist = await this.isLocationDetailExist(
+        location_detail.location_id,
       );
+      let date_now: Date = new Date();
+
+      if (!is_location_detail_exist) {
+        const locationDetailCreate = {
+          ...location_detail,
+          created_at: date_now,
+        };
+        await this.create(locationDetailCreate);
+      } else {
+        console.log(
+          '[ ' +
+            Date.now() +
+            ' ] Location Detail = ' +
+            location_detail.name +
+            ' is already exist !',
+        );
+      }
     } catch (error) {
       console.log(
         '[ ' + Date.now() + ' ] Failed to save location detail : ' + locationID,
