@@ -8,7 +8,7 @@ import { CustomConfigService } from './app/config/custom-config/custom-config.se
 import { LocationDetailService } from './app/spider/location-detail/location-detail.service';
 
 export const CronVariable = {
-  LOCATION_CRON_MINUTE: '40',
+  LOCATION_CRON_MINUTE: '45',
   LOCATION_CRON_HOUR: '22',
   LOCATION_CRON_DAY: '31',
 

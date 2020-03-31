@@ -8,7 +8,6 @@ import { IResponseHotel } from './interfaces/response-hotel.interface';
 import { IReview } from '../review/interfaces/review.interface';
 import { Location } from '../location/location.entity';
 import { Hotel } from '../hotel/hotel.entity';
-import { ILocation } from 'dist/app/spider/location/interfaces/location.interface';
 import { ILocationDetail } from '../location-detail/interfaces/location-detail.interface';
 import { IResponseLocationDetail } from './interfaces/response-location-detail.interface';
 
