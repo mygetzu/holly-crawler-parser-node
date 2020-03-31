@@ -54,7 +54,6 @@ export class ReviewService {
           ' ] Failed to save review with review id: ' +
           dto.id,
       );
-      console.log(error + '\n');
       throw new BadRequestException(
         '[ ' + Date.now() + ' ] Failed to save data !',
       );

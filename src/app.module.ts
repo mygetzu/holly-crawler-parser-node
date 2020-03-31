@@ -17,6 +17,7 @@ import { KafkaModule } from './app/services/kafka/kafka.module';
 import { KafkaService } from './app/services/kafka/kafka.service';
 import { CustomConfigModule } from './app/config/custom-config/custom-config.module';
 import { CustomConfigService } from './app/config/custom-config/custom-config.service';
+import { LocationDetailModule } from './app/spider/location-detail/location-detail.module';
 
 @Module({
   imports: [
@@ -41,9 +42,16 @@ import { CustomConfigService } from './app/config/custom-config/custom-config.se
     ReviewModule,
     KafkaModule,
     CustomConfigModule,
+    LocationDetailModule,
   ],
   controllers: [AppController],
-  providers: [AppService, LocationService, KafkaService, CustomConfigService],
+  providers: [
+    AppService,
+    LocationService,
+    KafkaService,
+    CustomConfigService,
+    LocationService,
+  ],
   exports: [LocationService],
 })
 export class AppModule {}

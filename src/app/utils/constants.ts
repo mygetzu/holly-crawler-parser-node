@@ -6,3 +6,6 @@ export const BASE_ENDPOINT_API_TRIPADVISOR =
 
 export const URL_HOTELS_BY_LOCATION =
   BASE_ENDPOINT_API_TRIPADVISOR + 'location/';
+
+export const URL_HOTELS_BY_LOCATION_DETAIL =
+  BASE_ENDPOINT_API_TRIPADVISOR + 'typeahead?category_type=geos';

@@ -89,7 +89,6 @@ export class HotelService {
       console.log(
         'Err : Failed to save hotel with loc hotel id : ' + dto.location_id,
       );
-      console.log(error + '\n');
       throw new BadRequestException('Failed to save data !');
     }
   }

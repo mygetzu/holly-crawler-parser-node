@@ -8,10 +8,28 @@ import { IResponseHotel } from './interfaces/response-hotel.interface';
 import { IReview } from '../review/interfaces/review.interface';
 import { Location } from '../location/location.entity';
 import { Hotel } from '../hotel/hotel.entity';
+import { ILocation } from 'dist/app/spider/location/interfaces/location.interface';
+import { ILocationDetail } from '../location-detail/interfaces/location-detail.interface';
 
 @Injectable()
 export class ApiService {
   constructor(private readonly http: HttpService) {}
+
+  async grabDetailLocation(
+    url: string,
+    loc: Location,
+  ): Promise<IResponseHotel<ILocationDetail>> {
+    try {
+      const location_details = await this.http
+        .get<IResponseHotel<ILocationDetail>>(url, {
+          headers: HEADER_TRIPADVISOR_API_REQ,
+        })
+        .toPromise();
+      return location_details.data;
+    } catch (error) {
+      console.log('Failed to retrieve detail location : ' + loc.name);
+    }
+  }
 
   async grabHotelByLocation(
     url: string,
