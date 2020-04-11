@@ -8,17 +8,17 @@ import { CustomConfigService } from './app/config/custom-config/custom-config.se
 import { LocationDetailService } from './app/spider/location-detail/location-detail.service';
 
 export const CronVariable = {
-  LOCATION_CRON_MINUTE: '50',
-  LOCATION_CRON_HOUR: '23',
-  LOCATION_CRON_DAY: '11',
+  LOCATION_CRON_MINUTE: '5',
+  LOCATION_CRON_HOUR: '0',
+  LOCATION_CRON_DAY: '12',
 
-  HOTEL_CRON_MINUTE: '55',
-  HOTEL_CRON_HOUR: '23',
-  HOTEL_CRON_DAY: '11',
+  HOTEL_CRON_MINUTE: '15',
+  HOTEL_CRON_HOUR: '0',
+  HOTEL_CRON_DAY: '12',
 
-  REVIEW_CRON_MINUTE: '59',
-  REVIEW_CRON_HOUR: '23',
-  REVIEW_CRON_DAY: '11',
+  REVIEW_CRON_MINUTE: '20',
+  REVIEW_CRON_HOUR: '0',
+  REVIEW_CRON_DAY: '12',
 };
 
 @Injectable()
