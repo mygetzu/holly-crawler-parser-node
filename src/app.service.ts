@@ -8,17 +8,17 @@ import { CustomConfigService } from './app/config/custom-config/custom-config.se
 import { LocationDetailService } from './app/spider/location-detail/location-detail.service';
 
 export const CronVariable = {
-  LOCATION_CRON_MINUTE: '45',
-  LOCATION_CRON_HOUR: '22',
-  LOCATION_CRON_DAY: '31',
+  LOCATION_CRON_MINUTE: '50',
+  LOCATION_CRON_HOUR: '23',
+  LOCATION_CRON_DAY: '11',
 
-  HOTEL_CRON_MINUTE: '5',
-  HOTEL_CRON_HOUR: '0',
-  HOTEL_CRON_DAY: '1',
+  HOTEL_CRON_MINUTE: '55',
+  HOTEL_CRON_HOUR: '23',
+  HOTEL_CRON_DAY: '11',
 
-  REVIEW_CRON_MINUTE: '10',
-  REVIEW_CRON_HOUR: '0',
-  REVIEW_CRON_DAY: '1',
+  REVIEW_CRON_MINUTE: '59',
+  REVIEW_CRON_HOUR: '23',
+  REVIEW_CRON_DAY: '11',
 };
 
 @Injectable()
@@ -31,6 +31,43 @@ export class AppService extends NestSchedule {
     private readonly kafkaService: KafkaService,
   ) {
     super();
+  }
+
+  @Cron(
+    '0 ' +
+      CronVariable.LOCATION_CRON_MINUTE +
+      ' ' +
+      CronVariable.LOCATION_CRON_HOUR +
+      ' ' +
+      CronVariable.LOCATION_CRON_DAY +
+      ' * *',
+    {
+      startTime: new Date(),
+      endTime: new Date(new Date().getTime() + 24 * 60 * 60 * 1000),
+    },
+  )
+  async crawlLocationDetail() {
+    console.log(
+      '=============== Start Crawling Location Detail ===============',
+    );
+    const locs = await this.locationService.findAll();
+
+    let i = 0;
+    const waitFor = ms => new Promise(r => setTimeout(r, ms));
+    const asyncForEach = async (index, array, callback) => {
+      for (index = 0; index < array.length; index++) {
+        await callback(array[index], index, array);
+      }
+    };
+
+    const saveHotels = async () => {
+      await asyncForEach(i, locs, async loc => {
+        await waitFor(1);
+        console.log(i++ + ' )');
+        await this.locationDetailService.createFromGrabbing(loc);
+      });
+    };
+    await saveHotels();
   }
 
   @Cron(
@@ -48,7 +85,7 @@ export class AppService extends NestSchedule {
   )
   async crawlHotel() {
     console.log('=============== Start Crawling Hotel List ===============');
-    const locs = await this.locationService.findAll();
+    const locs = await this.locationService.findIndonesia();
 
     let i = 0;
     const waitFor = ms => new Promise(r => setTimeout(r, ms));
@@ -102,42 +139,5 @@ export class AppService extends NestSchedule {
       });
     };
     await start();
-  }
-
-  @Cron(
-    '0 ' +
-      CronVariable.LOCATION_CRON_MINUTE +
-      ' ' +
-      CronVariable.LOCATION_CRON_HOUR +
-      ' ' +
-      CronVariable.LOCATION_CRON_DAY +
-      ' * *',
-    {
-      startTime: new Date(),
-      endTime: new Date(new Date().getTime() + 24 * 60 * 60 * 1000),
-    },
-  )
-  async crawlLocationDetail() {
-    console.log(
-      '=============== Start Crawling Location Detail ===============',
-    );
-    const locs = await this.locationService.findAll();
-
-    let i = 0;
-    const waitFor = ms => new Promise(r => setTimeout(r, ms));
-    const asyncForEach = async (index, array, callback) => {
-      for (index = 0; index < array.length; index++) {
-        await callback(array[index], index, array);
-      }
-    };
-
-    const saveHotels = async () => {
-      await asyncForEach(i, locs, async loc => {
-        await waitFor(1);
-        console.log(i++ + ' )');
-        await this.locationDetailService.createFromGrabbing(loc);
-      });
-    };
-    await saveHotels();
   }
 }
